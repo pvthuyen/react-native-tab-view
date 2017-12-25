@@ -119,6 +119,7 @@ export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
   };
 
   _startGesture = (evt: GestureEvent, gestureState: GestureState) => {
+    console.log('haha', evt, gestureState);
     if (typeof this.props.onSwipeStart === 'function') {
       this.props.onSwipeStart(evt, gestureState);
     }
