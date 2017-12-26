@@ -119,22 +119,25 @@ export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
   };
 
   _startGesture = (evt: GestureEvent, gestureState: GestureState) => {
-    console.log('haha', evt, gestureState);
     if (typeof this.props.onSwipeStart === 'function') {
       this.props.onSwipeStart(evt, gestureState);
     }
+
+    this.startingX = evt.nativeEvent.locationX || gestureState.x0;
 
     this.props.panX.stopAnimation();
   };
 
   _respondToGesture = (evt: GestureEvent, gestureState: GestureState) => {
     const { navigationState: { routes, index } } = this.props;
-
     if (
       // swiping left
       (gestureState.dx > 0 && index <= 0) ||
       // swiping right
-      (gestureState.dx < 0 && index >= routes.length - 1)
+      (gestureState.dx < 0 && index >= routes.length - 1) ||
+      (this.startingX &&
+        ((gestureState.dx > 0 && this.startingX > 50) ||
+        (gestureState.dx < 0 && this.startingX < screenWidth - 50)))
     ) {
       return;
     }
@@ -148,6 +151,16 @@ export default class TabViewPagerPan<T: *> extends React.Component<Props<T>> {
       layout,
       swipeDistanceThreshold = layout.width / 1.75,
     } = this.props;
+
+    if (this.startingX &&
+      ((gestureState.dx > 0 && this.startingX > 50) ||
+      (gestureState.dx < 0 && this.startingX < screenWidth - 50))
+    ) {
+      this.startingX = undefined;
+      return;
+    }
+
+    this.startingX = undefined;
 
     let { swipeVelocityThreshold = 0.15 } = this.props;
 
