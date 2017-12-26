@@ -8,12 +8,15 @@ import {
   StyleSheet,
   View,
   Platform,
+  Dimensions
 } from 'react-native';
 import { PagerRendererPropType } from './TabViewPropTypes';
 import type {
   PagerRendererProps,
   TransitionConfigurator,
 } from './TabViewTypeDefinitions';
+
+const screenWidth = Dimensions.get('screen').width;
 
 type GestureEvent = {
   nativeEvent: {
